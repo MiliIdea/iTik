@@ -9,6 +9,9 @@
 import UIKit
 import CoreLocation
 import CoreBluetooth
+import DCKit
+import Alamofire
+import Gloss
 
 class PaymentViewController: UIViewController ,CLLocationManagerDelegate , BluetoothSerialDelegate{
     
@@ -40,6 +43,14 @@ class PaymentViewController: UIViewController ,CLLocationManagerDelegate , Bluet
     
     var selectedBeaconCode : String = ""
     
+    public let `default2`: SessionManager = {
+        let configuration = URLSessionConfiguration.default
+        configuration.httpAdditionalHeaders = SessionManager.defaultHTTPHeaders
+        configuration.timeoutIntervalForRequest = 10
+        configuration.timeoutIntervalForResource = 10
+        return SessionManager(configuration: configuration)
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -51,7 +62,7 @@ class PaymentViewController: UIViewController ,CLLocationManagerDelegate , Bluet
 
     func login(){
         
-        let manager = SessionManager.default2
+        let manager = default2
         
         manager.request( URLs.login , method: .post , parameters: LoginRequestModel.init().getParams() , encoding: JSONEncoding.default).responseJSON { response in
             
@@ -175,7 +186,7 @@ class PaymentViewController: UIViewController ,CLLocationManagerDelegate , Bluet
         
 //        self.writeOnBLE(value: "true")
         
-        let manager = SessionManager.default2
+        let manager = default2
 
             manager.request(URLs.setPayment , method: .post , parameters: SetPaymentRequestModel.init(CODE: beaconCode, MONEY: self.paymentPriceText.text!).getParams(), encoding: JSONEncoding.default).responseJSON { response in
                 print()
@@ -269,6 +280,7 @@ class PaymentViewController: UIViewController ,CLLocationManagerDelegate , Bluet
     }
     
     func sendData(){
+        print("--->>> send data")
 //        if(serial.isReady){
 //            var msg : String = "SS" + self.paymentPriceText.text! + "SE"
 //            serial.sendMessageToDevice(msg)
@@ -466,7 +478,7 @@ class PaymentViewController: UIViewController ,CLLocationManagerDelegate , Bluet
         
         print("requeste pay : " , beaconCode)
         
-        let manager = SessionManager.default2
+        let manager = default2
         
         manager.request( URLs.getPayment , method: .post , parameters: GetPaymentRequestModel.init(CODE: beaconCode).getParams() , encoding: JSONEncoding.default).responseJSON { response in
             print()
@@ -491,7 +503,7 @@ class PaymentViewController: UIViewController ,CLLocationManagerDelegate , Bluet
                     
                     self.secondAnimate()
                     
-                    UIView.animate(withDuration: 0.3, delay: 0.0, options: UIViewAnimationOptions.curveEaseOut, animations: {
+                    UIView.animate(withDuration: 0.3, delay: 0.0, options: UIView.AnimationOptions.curveEaseOut, animations: {
                         
                         self.showPayPopup(payTitle: GetPaymentResponseModel.init(json: JSON as! JSON).data?.title)
                         

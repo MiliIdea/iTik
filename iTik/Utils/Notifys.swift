@@ -18,14 +18,14 @@ class Notifys {
         let alert = UIAlertController(title: "", message: "", preferredStyle: .alert)
         
         let attributedString = NSAttributedString(string: message, attributes: [
-            NSFontAttributeName : UIFont.init(name: "IRANYekanMobileFaNum", size: 12)!
+            NSAttributedString.Key.font : UIFont.init(name: "IRANYekanMobileFaNum", size: 12)!
             ])
         
         
         alert.setValue(attributedString, forKey: "attributedMessage")
         
         let attributedString2 = NSAttributedString(string: buttonTitle, attributes: [
-            NSFontAttributeName : UIFont.init(name: "IRANYekanMobileFaNum", size: 12)!
+            NSAttributedString.Key.font : UIFont.init(name: "IRANYekanMobileFaNum", size: 12)!
             ])
         
         let ac : UIAlertAction = UIAlertAction.init(title: buttonTitle, style: .cancel){(alert: UIAlertAction!) in
@@ -55,13 +55,13 @@ class Notifys {
         let alert = UIAlertController(title: "", message: "", preferredStyle: .alert)
         
         let attributedString = NSAttributedString(string: message, attributes: [
-            NSFontAttributeName : UIFont.init(name: "IRANYekanMobileFaNum", size: 15)!
-            , NSForegroundColorAttributeName : UIColor.white])
+            NSAttributedString.Key.font : UIFont.init(name: "IRANYekanMobileFaNum", size: 15)!
+            , NSAttributedString.Key.foregroundColor : UIColor.white])
         
         alert.setValue(attributedString, forKey: "attributedMessage")
         
         let attributedString2 = NSAttributedString(string: button1Title, attributes: [
-            NSFontAttributeName : UIFont.init(name: "IRANYekanMobileFaNum", size: 11)!])
+            NSAttributedString.Key.font : UIFont.init(name: "IRANYekanMobileFaNum", size: 11)!])
         
         let ac : UIAlertAction = UIAlertAction.init(title: button1Title, style: .default){(alert: UIAlertAction!) in
             guard let l = (alert.value(forKey: "__representer") as AnyObject).value(forKey: "label") as? UILabel else { return }
@@ -75,7 +75,7 @@ class Notifys {
         
         
         let attributedString3 = NSAttributedString(string: button2Title, attributes: [
-            NSFontAttributeName : UIFont.init(name: "IRANYekanMobileFaNum", size: 11)!])
+            NSAttributedString.Key.font : UIFont.init(name: "IRANYekanMobileFaNum", size: 11)!])
         
         let ac2 : UIAlertAction = UIAlertAction.init(title: button2Title, style: .cancel){(alert: UIAlertAction!) in
             guard let l = (alert.value(forKey: "__representer") as AnyObject).value(forKey: "label") as? UILabel else { return }
@@ -96,10 +96,18 @@ class Notifys {
         subview2.layer.borderColor = UIColor.white.cgColor
         let view = subview2.subviews.first! as UIView
         
-        view.backgroundColor = UIColor.init(hex: "973D8D")
+        if #available(iOS 11.0, *) {
+            view.backgroundColor = UIColor.init(named: "973D8D")
+        } else {
+            // Fallback on earlier versions
+        }
         view.layer.cornerRadius = 10.0
         
-        alert.view.backgroundColor = UIColor.init(hex: "973D8D")
+        if #available(iOS 11.0, *) {
+            alert.view.backgroundColor = UIColor.init(named: "973D8D")
+        } else {
+            // Fallback on earlier versions
+        }
         alert.view.layer.cornerRadius = 10.0
         alert.view.tintColor = UIColor.white
         alert.view.layer.borderColor = UIColor.white.cgColor

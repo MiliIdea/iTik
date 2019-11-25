@@ -99,7 +99,7 @@ class SaveAndLoadModel {
         
         let result = try? moc?.fetch(fetchRequest)
         
-        for object in result!! {
+        for object in result! {
             
             moc?.delete(object as! NSManagedObject)
             
@@ -130,9 +130,9 @@ class SaveAndLoadModel {
         
         let result = try? moc?.fetch(fetchRequest)
         
-        if((result??.count)! > 0){
+        if((result?.count)! > 0){
             
-            for object in result!! {
+            for object in result! {
                 
                 moc?.delete(object as! NSManagedObject)
                 
@@ -165,9 +165,9 @@ class SaveAndLoadModel {
         
         let result = try? moc?.fetch(fetchRequest) as? [NSManagedObject]
         
-        if((result??.count)! > 0){
+        if((result?.count)! > 0){
             
-            result??[0].setValuesForKeys(newItem)
+            result?[0].setValuesForKeys(newItem)
             
         }
         
@@ -198,9 +198,9 @@ class SaveAndLoadModel {
         
         let result = try? moc?.fetch(fetchRequest) as? [NSManagedObject]
         
-        if((result??.count)! > 0){
+        if((result?.count)! > 0){
             
-            return (result??[0])!
+            return (result?[0])!
             
         }else{
             

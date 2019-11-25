@@ -15,8 +15,22 @@ target 'iTik' do
   
   pod 'CellAnimator'
   
-  pod 'CryptoSwift','~> 0.7.0'
+  pod 'CryptoSwift'
+#  ,'~> 0.7.0'
   
-  pod 'SWXMLHash','~> 4.0.0'
+  pod 'SWXMLHash'
+#  ,'~> 4.0.0'
+
+  pod 'AlamofireImage'
+  
+  pod 'Alamofire'
+  
+  pod 'DCKit'
+  
+  pod 'Gloss'
+  
+  pod 'PromiseKit/QuartzCore'
+  
+#  pod 'Spring'
 
 end

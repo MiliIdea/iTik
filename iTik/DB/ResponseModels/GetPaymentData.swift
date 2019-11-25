@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Gloss
 
 class GetPaymentData : Decodable{
     

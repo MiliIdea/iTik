@@ -20,9 +20,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,CLLocationManagerDelegate
     
     let locationManager = CLLocationManager()
     
-    var backgroundTask: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+    var backgroundTask: UIBackgroundTaskIdentifier = UIBackgroundTaskIdentifier.invalid
     
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    internal func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         locationManager.delegate = self
         
@@ -60,12 +60,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,CLLocationManagerDelegate
             
         }
         
-        assert(backgroundTask != UIBackgroundTaskInvalid)
+        assert(backgroundTask != UIBackgroundTaskIdentifier.invalid)
         
     }
     
     func reinstateBackgroundTask() {
-        if (backgroundTask == UIBackgroundTaskInvalid) {
+        if (backgroundTask == UIBackgroundTaskIdentifier.invalid) {
             // register background task
             registerBackgroundTask()
         }
