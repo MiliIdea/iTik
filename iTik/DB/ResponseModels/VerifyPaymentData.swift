@@ -9,7 +9,7 @@
 import Foundation
 import Gloss
 
-class VerifyPaymentData : Decodable{
+class VerifyPaymentData : JSONDecodable{
     
     var url : String?
     

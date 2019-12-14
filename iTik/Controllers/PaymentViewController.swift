@@ -77,15 +77,15 @@ class PaymentViewController: UIViewController ,CLLocationManagerDelegate , Bluet
                     
                     GlobalFields.user = LoginResponseModel.init(json: JSON as! JSON).user!
                     
+                    print(GetUUIDListRequestModel.init().getParams())
                     manager.request( URLs.uuidListPayment , method: .post , parameters: GetUUIDListRequestModel.init().getParams() , encoding: JSONEncoding.default).responseJSON { response in
-                        
+                    
                         if let JSON = response.result.value {
                             
                             print("JSON ----------uuidListPayment----------->>>> " ,JSON)
-                            //create my coupon response model
                             
                             if( GetUUIDListResponseModel.init(json: JSON as! JSON).code == "200"){
-                                GlobalFields.PAY_UUIDS = GetUUIDListResponseModel.init(json: JSON as! JSON).data?.uuid
+                                GlobalFields.PAY_UUIDS = (GetUUIDListResponseModel.init(json: JSON as! JSON).data?.uuid!)
                             }
                             
                         }
@@ -184,85 +184,85 @@ class PaymentViewController: UIViewController ,CLLocationManagerDelegate , Bluet
         
         self.selectedBeaconCode = beaconCode
         
-//        self.writeOnBLE(value: "true")
+        self.writeOnBLE(value: "true")
         
-        let manager = default2
-
-            manager.request(URLs.setPayment , method: .post , parameters: SetPaymentRequestModel.init(CODE: beaconCode, MONEY: self.paymentPriceText.text!).getParams(), encoding: JSONEncoding.default).responseJSON { response in
-                print()
-
-                switch (response.result) {
-                case .failure(let _):
-
-                    self.view.isUserInteractionEnabled = true
-
-                    return
-
-
-                default: break
-
-                }
-
-                if let JSON = response.result.value {
-
-                    print("JSON ----------Payment----------->>>> " ,JSON)
-                    //create my coupon response model
-
-                    self.view.isUserInteractionEnabled = true
-
-                    if( SetPaymentResponseModel.init(json: JSON as! JSON).code == "200"){
-
-                        request(URLs.verifyPayment , method: .post , parameters: VerifyPaymentRequestModel.init(CODE_FROM_SET_SERVICE:  SetPaymentResponseModel.init(json: JSON as! JSON).data?.code).getParams(), encoding: JSONEncoding.default).responseJSON { response in
-                            print()
-
-                            if let JSON2 = response.result.value {
-
-                                print("JSON ----------Payment Verify----------->>>> " ,JSON2)
-                                //create my coupon response model
-
-                                if( VerifyPaymentResponseModel.init(json: JSON2 as! JSON).code == "200"){
-
-
-                                    if(VerifyPaymentResponseModel.init(json: JSON2 as! JSON).data?.url?.isEmpty)!{
-                                        self.closePayment("")
-                                        Notifys().notif(message: "پرداخت با موفقیت انجام شد"){ alarm in
-
-                                            self.present(alarm, animated: true, completion: nil)
-
-                                        }
-
-                                        self.writeOnBLE(value: "true")
-
-                                    }else{
-                                        GlobalFields.goOnlinePay = true
-                                        self.viewDidDisappear(true)
-                                        UIApplication.shared.openURL(URL(string: (VerifyPaymentResponseModel.init(json: JSON2 as! JSON).data?.url)!)!)
-                                    }
-
-                                }else{
-
-                                    Notifys().notif(message: "verify payment error"){ alarm in
-
-                                        self.present(alarm, animated: true, completion: nil)
-
-                                    }
-
-                                }
-                                self.closePayment("")
-
-                            }
-
-                        }
-
-                    }else{
-
-                        self.closePayment("")
-
-                    }
-
-                }
-
-            }
+//        let manager = default2
+//
+//            manager.request(URLs.setPayment , method: .post , parameters: SetPaymentRequestModel.init(CODE: beaconCode, MONEY: self.paymentPriceText.text!).getParams(), encoding: JSONEncoding.default).responseJSON { response in
+//                print()
+//
+//                switch (response.result) {
+//                case .failure(let _):
+//
+//                    self.view.isUserInteractionEnabled = true
+//
+//                    return
+//
+//
+//                default: break
+//
+//                }
+//
+//                if let JSON = response.result.value {
+//
+//                    print("JSON ----------Payment----------->>>> " ,JSON)
+//                    //create my coupon response model
+//
+//                    self.view.isUserInteractionEnabled = true
+//
+//                    if( SetPaymentResponseModel.init(json: JSON as! JSON).code == "200"){
+//
+//                        request(URLs.verifyPayment , method: .post , parameters: VerifyPaymentRequestModel.init(CODE_FROM_SET_SERVICE:  SetPaymentResponseModel.init(json: JSON as! JSON).data?.code).getParams(), encoding: JSONEncoding.default).responseJSON { response in
+//                            print()
+//
+//                            if let JSON2 = response.result.value {
+//
+//                                print("JSON ----------Payment Verify----------->>>> " ,JSON2)
+//                                //create my coupon response model
+//
+//                                if( VerifyPaymentResponseModel.init(json: JSON2 as! JSON).code == "200"){
+//
+//
+//                                    if(VerifyPaymentResponseModel.init(json: JSON2 as! JSON).data?.url?.isEmpty)!{
+//                                        self.closePayment("")
+//                                        Notifys().notif(message: "پرداخت با موفقیت انجام شد"){ alarm in
+//
+//                                            self.present(alarm, animated: true, completion: nil)
+//
+//                                        }
+//
+//                                        self.successPayment()
+//
+//                                    }else{
+//                                        GlobalFields.goOnlinePay = true
+//                                        self.viewDidDisappear(true)
+//                                        UIApplication.shared.openURL(URL(string: (VerifyPaymentResponseModel.init(json: JSON2 as! JSON).data?.url)!)!)
+//                                    }
+//
+//                                }else{
+//
+//                                    Notifys().notif(message: "verify payment error"){ alarm in
+//
+//                                        self.present(alarm, animated: true, completion: nil)
+//
+//                                    }
+//
+//                                }
+//                                self.closePayment("")
+//
+//                            }
+//
+//                        }
+//
+//                    }else{
+//
+//                        self.closePayment("")
+//
+//                    }
+//
+//                }
+//
+//            }
 
         
     }
@@ -271,9 +271,16 @@ class PaymentViewController: UIViewController ,CLLocationManagerDelegate , Bluet
         
         paymentView.alpha = 0
         
+        serial.disconnect()
+        
     }
     
     ////////////////////////////////////////////
+    
+    
+    func successPayment(){
+        serial.startScan()
+    }
     
     func writeOnBLE(value : String){
         serial.startScan()
@@ -281,10 +288,10 @@ class PaymentViewController: UIViewController ,CLLocationManagerDelegate , Bluet
     
     func sendData(){
         print("--->>> send data")
-//        if(serial.isReady){
-//            var msg : String = "SS" + self.paymentPriceText.text! + "SE"
-//            serial.sendMessageToDevice(msg)
-//        }
+        if(serial.isReady){
+            let msg : String = "SS" + self.paymentPriceText.text! + "SE"
+            serial.sendMessageToDevice(msg)
+        }
     }
     
     //MARK: BluetoothSerialDelegate
@@ -295,11 +302,12 @@ class PaymentViewController: UIViewController ,CLLocationManagerDelegate , Bluet
             if exisiting.peripheral.identifier == peripheral.identifier { return }
         }
 
-        var s : [Substring] = self.selectedBeaconCode.split(separator: "-")
+        let s : [Substring] = self.selectedBeaconCode.split(separator: "-")
         
-        var res : String = s[1].description + s[2].description
+        let res : String = s[1].description + s[2].description
         
-        if(peripheral.name == res){
+//        if(peripheral.name == res){
+        if(peripheral.name == "467664005"){
             serial.stopScan()
             serial.connectToPeripheral(peripheral)
         }

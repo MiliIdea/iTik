@@ -9,7 +9,7 @@
 import Foundation
 import Gloss
 
-class SetPaymentData : Decodable{
+class SetPaymentData : JSONDecodable{
     
     var code : String?
     

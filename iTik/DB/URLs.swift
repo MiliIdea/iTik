@@ -10,7 +10,7 @@ import Foundation
 
 class URLs {
     
-    static let server = "http://rest.itikapp.com/api/"
+    static let server = "http://rest.pc-teach.ir/api/"
     
     static let login = server + "login/device"
     
